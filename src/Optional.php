@@ -2,6 +2,7 @@
 
 namespace JimmyOak\Optional;
 
+use JimmyOak\Optional\Exception\FlatMapCallbackMustReturnOptionalException;
 use JimmyOak\Optional\Exception\NoSuchElementException;
 use JimmyOak\Optional\Exception\NullPointerException;
 
@@ -222,8 +223,11 @@ final class Optional
         return $value;
     }
 
-    private static function requireOptional(self $value)
+    private static function requireOptional($value)
     {
+        if (!$value instanceof self) {
+            throw new FlatMapCallbackMustReturnOptionalException();
+        }
         return $value;
     }
 }
