@@ -1,0 +1,31 @@
+{
+  "name": "jimmyoak/optional",
+  "keywords": ["utilities", "util", "optional", "optionals", "jimmy", "jimmyoak"],
+  "authors": [
+    {
+      "name": "Adrián Robles Maiz",
+      "email": "adrian.robles.maiz@gmail.com",
+      "homepage": "http://github.com/jimmyoak"
+    }
+  ],
+  "license": "MIT",
+  "autoload": {
+    "psr-4": {
+      "JimmyOak\\Optional\\": "src/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "JimmyOak\\Test\\Optional\\": "test/"
+    }
+  },
+  "require": {
+    "php": ">=7.0"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "^5.5"
+  },
+  "config": {
+    "bin-dir": "bin/"
+  }
+}
