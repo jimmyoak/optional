@@ -1,3 +1,3 @@
 # Optional
 
-Optional port of Java 8's optional.
+A port of Java 8's java.util.Optional.
