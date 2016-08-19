@@ -6,50 +6,8 @@ use JimmyOak\Optional\Exception\FlatMapCallbackMustReturnOptionalException;
 use JimmyOak\Optional\Exception\NoSuchElementException;
 use JimmyOak\Optional\Exception\NullPointerException;
 
-abstract class Optional
+final class None extends Optional
 {
-    /**
-     * Create empty optional with no value.
-     *
-     * @return Optional
-     */
-    public static function empty(): Optional
-    {
-        static $empty = null;
-        if (null === $empty) {
-            $empty = new None();
-        }
-
-        return $empty;
-    }
-
-
-    /**
-     * Create optional with given value
-     *
-     * @throws NoSuchElementException when null value is specified
-     *
-     * @param $value
-     *
-     * @return Optional
-     */
-    public static function of($value)
-    {
-        return new Some($value);
-    }
-
-    /**
-     * Creates an optional given a possibly null value
-     *
-     * @param $value
-     *
-     * @return Optional
-     */
-    public static function ofNullable($value)
-    {
-        return null === $value ? self::empty() : self::of($value);
-    }
-
     /**
      * Gets value if present
      *
@@ -57,21 +15,30 @@ abstract class Optional
      *
      * @return mixed|null
      */
-    public abstract function get();
+    public function get()
+    {
+        throw new NoSuchElementException("No value present");
+    }
 
     /**
      * Returns true if optional has a value, otherwise, returns false
      *
      * @return bool
      */
-    public abstract function isPresent() : bool;
+    public function isPresent() : bool
+    {
+        return false;
+    }
 
     /**
      * Executes given $callback in case value is present
      *
      * @param callable $callback
      */
-    public abstract function ifPresent(callable $callback);
+    public function ifPresent(callable $callback)
+    {
+        // do nothing
+    }
 
     /**
      * Filters held value. Returns empty optional in case given $predicate returns false
@@ -81,7 +48,11 @@ abstract class Optional
      * @return Optional
      * @throws NullPointerException
      */
-    public abstract function filter(callable $predicate);
+    public function filter(callable $predicate)
+    {
+        $this->requireNonNull($predicate);
+        return $this;
+    }
 
     /**
      * In case a value is present applies given $mapper callback.
@@ -92,7 +63,11 @@ abstract class Optional
      * @return Optional
      * @throws NullPointerException
      */
-    public abstract function map(callable $mapper);
+    public function map(callable $mapper)
+    {
+        $this->requireNonNull($mapper);
+        return self::empty();
+    }
 
     /**
      * In case a value is present applies given $mapper callback.
@@ -104,7 +79,11 @@ abstract class Optional
      * @throws FlatMapCallbackMustReturnOptionalException
      * @throws NullPointerException
      */
-    public abstract function flatMap(callable $mapper);
+    public function flatMap(callable $mapper)
+    {
+        $this->requireNonNull($mapper);
+        return self::empty();
+    }
 
     /**
      * If present returns held value, otherwise returns given $other value
@@ -113,7 +92,10 @@ abstract class Optional
      *
      * @return mixed|null
      */
-    public abstract function orElse($other);
+    public function orElse($other)
+    {
+        return $other;
+    }
 
     /**
      * If present returns held value, otherwise returns
@@ -123,7 +105,10 @@ abstract class Optional
      *
      * @return mixed|null
      */
-    public abstract function orElseGet(callable $other);
+    public function orElseGet(callable $other)
+    {
+        return $other();
+    }
 
     /**
      * If present returns held value, othwerise throws given $exception
@@ -133,7 +118,10 @@ abstract class Optional
      * @return mixed|null
      * @throws \Exception
      */
-    public abstract function orElseThrow(\Exception $exception);
+    public function orElseThrow(\Exception $exception)
+    {
+        throw $exception;
+    }
 
     /**
      * Compares two optionals. Returns true in case value is the same.
@@ -142,16 +130,13 @@ abstract class Optional
      *
      * @return bool
      */
-    public abstract function equals(Optional $obj): bool;
-
-    public abstract function __toString();
-
-    protected function requireNonNull($value)
+    public function equals(Optional $obj): bool
     {
-        if (null === $value) {
-            throw new NullPointerException();
-        }
+        return $this === $obj || $obj instanceof None;
+    }
 
-        return $value;
+    public function __toString()
+    {
+        return 'Optional.empty';
     }
 }
