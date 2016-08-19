@@ -13,7 +13,7 @@ final class None extends Optional
      *
      * @throws NoSuchElementException in case no value
      *
-     * @return mixed|null
+     * @return mixed
      */
     public function get()
     {
@@ -90,7 +90,7 @@ final class None extends Optional
      *
      * @param $other
      *
-     * @return mixed|null
+     * @return mixed
      */
     public function orElse($other)
     {
@@ -103,7 +103,7 @@ final class None extends Optional
      *
      * @param callable $other
      *
-     * @return mixed|null
+     * @return mixed
      */
     public function orElseGet(callable $other)
     {
@@ -115,7 +115,7 @@ final class None extends Optional
      *
      * @param \Exception $exception
      *
-     * @return mixed|null
+     * @return mixed
      * @throws \Exception
      */
     public function orElseThrow(\Exception $exception)

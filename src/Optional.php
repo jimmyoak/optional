@@ -55,7 +55,7 @@ abstract class Optional
      *
      * @throws NoSuchElementException in case no value
      *
-     * @return mixed|null
+     * @return mixed
      */
     public abstract function get();
 
@@ -111,7 +111,7 @@ abstract class Optional
      *
      * @param $other
      *
-     * @return mixed|null
+     * @return mixed
      */
     public abstract function orElse($other);
 
@@ -121,7 +121,7 @@ abstract class Optional
      *
      * @param callable $other
      *
-     * @return mixed|null
+     * @return mixed
      */
     public abstract function orElseGet(callable $other);
 
@@ -130,7 +130,7 @@ abstract class Optional
      *
      * @param \Exception $exception
      *
-     * @return mixed|null
+     * @return mixed
      * @throws \Exception
      */
     public abstract function orElseThrow(\Exception $exception);
