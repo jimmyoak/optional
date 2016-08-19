@@ -57,6 +57,43 @@ $request = new Request(null);
 ```
 Program will throw the specified exception, otherwise, will return specified parsed date.
 
+### filter
+
+```php
+$request = new Request('1992-10-07');
+
+$makeDateTime = function ($value) {
+    return \DateTime::createFromFormat('Y-m-d', $value);
+};
+
+$beforeNow = function (\DateTime $date) {
+    return $date->getTimestamp() > (new \DateTime())->getTimestamp();
+};
+
+$date = Optional::ofNullable($request->getDate())
+    ->map($makeDateTime)
+    ->filter($beforeNow)
+    ->orElse(new \DateTime());
+
+echo $date->format('Y-m-d');
+```
+Outputs (similar): `2016-08-19`
+
+With: `$request = new Request('2030-01-01');` would output: `2030-01-01`
+
+With: `$request = new Request(null);` would output: `2016-08-19`
+
+### ifPresent
+
+```php
+Optional::ofNullable($request->getDate())
+    ->ifPresent(function ($value) {
+        echo "It's present: " . $value;
+    });
+```
+If value, it would output: `It's present: 1992-10-07`
+Otherwise would do nothing.
+
 ### Comparable
 
 Returns true:
