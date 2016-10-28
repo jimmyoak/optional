@@ -2,12 +2,28 @@
 
 namespace JimmyOak\Optional;
 
+use JimmyOak\Optional\Exception\BadMethodCallException;
 use JimmyOak\Optional\Exception\FlatMapCallbackMustReturnOptionalException;
 use JimmyOak\Optional\Exception\NoSuchElementException;
 use JimmyOak\Optional\Exception\NullPointerException;
 
 final class Some extends Optional
 {
+    public static function empty(): Optional
+    {
+        throw new BadMethodCallException('Use Optional::empty instead');
+    }
+
+    public static function of($value)
+    {
+        throw new BadMethodCallException('Use Optional::of instead');
+    }
+
+    public static function ofNullable($value)
+    {
+        throw new BadMethodCallException('Use Optional::ofNullable instead');
+    }
+
     /**
      * Value holder. Null in case of no value.
      * @var mixed
@@ -16,7 +32,7 @@ final class Some extends Optional
 
     public function __construct($value)
     {
-        $this->requireNonNull($value);
+        self::requireNonNull($value);
         $this->value = $value;
     }
 
@@ -62,7 +78,7 @@ final class Some extends Optional
      */
     public function filter(callable $predicate)
     {
-        $this->requireNonNull($predicate);
+        self::requireNonNull($predicate);
         return $predicate($this->value) ? $this : parent::empty();
     }
 
@@ -77,8 +93,8 @@ final class Some extends Optional
      */
     public function map(callable $mapper)
     {
-        $this->requireNonNull($mapper);
-        return self::ofNullable($mapper($this->value));
+        self::requireNonNull($mapper);
+        return parent::ofNullable($mapper($this->value));
     }
 
     /**
@@ -93,7 +109,7 @@ final class Some extends Optional
      */
     public function flatMap(callable $mapper)
     {
-        $this->requireNonNull($mapper);
+        self::requireNonNull($mapper);
         return $this->requireOptional($mapper($this->value));
     }
 

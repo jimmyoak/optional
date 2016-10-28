@@ -2,12 +2,28 @@
 
 namespace JimmyOak\Optional;
 
+use JimmyOak\Optional\Exception\BadMethodCallException;
 use JimmyOak\Optional\Exception\FlatMapCallbackMustReturnOptionalException;
 use JimmyOak\Optional\Exception\NoSuchElementException;
 use JimmyOak\Optional\Exception\NullPointerException;
 
 final class None extends Optional
 {
+    public static function empty(): Optional
+    {
+        throw new BadMethodCallException('Use Optional::empty instead');
+    }
+
+    public static function of($value)
+    {
+        throw new BadMethodCallException('Use Optional::of instead');
+    }
+
+    public static function ofNullable($value)
+    {
+        throw new BadMethodCallException('Use Optional::ofNullable instead');
+    }
+
     /**
      * Gets value if present
      *
@@ -50,7 +66,7 @@ final class None extends Optional
      */
     public function filter(callable $predicate)
     {
-        $this->requireNonNull($predicate);
+        self::requireNonNull($predicate);
         return $this;
     }
 
@@ -65,8 +81,8 @@ final class None extends Optional
      */
     public function map(callable $mapper)
     {
-        $this->requireNonNull($mapper);
-        return self::empty();
+        self::requireNonNull($mapper);
+        return parent::empty();
     }
 
     /**
@@ -81,8 +97,8 @@ final class None extends Optional
      */
     public function flatMap(callable $mapper)
     {
-        $this->requireNonNull($mapper);
-        return self::empty();
+        self::requireNonNull($mapper);
+        return parent::empty();
     }
 
     /**

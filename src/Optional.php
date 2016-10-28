@@ -146,7 +146,7 @@ abstract class Optional
 
     public abstract function __toString();
 
-    protected function requireNonNull($value)
+    protected static function requireNonNull($value)
     {
         if (null === $value) {
             throw new NullPointerException();
