@@ -111,6 +111,43 @@ class OptionalTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
+    public function should_execute_if_value_is_present_on_ifPresentOrElse()
+    {
+        $optional = Optional::of(self::VALUE);
+        $passIfPresent = false;
+        $passOrElse = false;
+        $optional->ifPresentOrElse(function ($value) use (&$passIfPresent) {
+            $this->assertSame(self::VALUE, $value);
+            $passIfPresent = true;
+        }, function () use (&$passOrElse) {
+            $passOrElse = true;
+        });
+
+        $this->assertTrue($passIfPresent);
+        $this->assertFalse($passOrElse);
+    }
+
+    /**
+     * @test
+     */
+    public function should_execute_orElse_if_no_value_present_on_ifPresentOrElse()
+    {
+        $optional = Optional::empty();
+        $passIfPresent = false;
+        $passOrElse = false;
+        $optional->ifPresentOrElse(function ($value) use (&$passIfPresent) {
+            $passIfPresent = true;
+        }, function () use (&$passOrElse) {
+            $passOrElse = true;
+        });
+
+        $this->assertFalse($passIfPresent);
+        $this->assertTrue($passOrElse);
+    }
+
+    /**
+     * @test
+     */
     public function should_return_optional_helding_value_in_case_filter_callback_returns_true()
     {
         $valueIsString = function ($value) {
@@ -210,6 +247,51 @@ class OptionalTest extends \PHPUnit_Framework_TestCase
         Optional::of(self::VALUE)->flatMap(function ($value) {
             return $value;
         });
+    }
+
+    /**
+     * @test
+     */
+    public function should_return_first_optional_if_value_is_present()
+    {
+        $anotherOptionalValue = function () {
+            return Optional::of(self::ANOTHER_VALUE);
+        };
+
+        $optional = Optional::of(self::VALUE)
+            ->or($anotherOptionalValue);
+
+        $this->assertSame(self::VALUE, $optional->get());
+    }
+
+    /**
+     * @test
+     */
+    public function should_return_or_optional_if_value_is_not_present_in_first_optional()
+    {
+        $someOptionalWithValue = function () {
+            return Optional::of(self::VALUE);
+        };
+
+        $optional = Optional::empty()
+            ->or($someOptionalWithValue);
+
+        $this->assertSame(self::VALUE, $optional->get());
+    }
+
+    /**
+     * @test
+     */
+    public function should_return_empty_optional_if_value_is_not_present_in_any_or()
+    {
+        $someOptionalWithNoValue = function () {
+            return Optional::ofNullable(self::NO_VALUE);
+        };
+
+        $optional = Optional::empty()
+            ->or($someOptionalWithNoValue);
+
+        $this->assertTrue(Optional::empty()->equals($optional));
     }
 
     /**

@@ -74,6 +74,15 @@ abstract class Optional
     public abstract function ifPresent(callable $callback);
 
     /**
+     * If a value is present, performs the given action with the value,
+     * otherwise performs the given empty-based action
+     *
+     * @param callable $ifPresent
+     * @param callable $orElse
+     */
+    public abstract function ifPresentOrElse(callable $ifPresent, callable $orElse);
+
+    /**
      * Filters held value. Returns empty optional in case given $predicate returns false
      *
      * @param callable $predicate
@@ -105,6 +114,16 @@ abstract class Optional
      * @throws NullPointerException
      */
     public abstract function flatMap(callable $mapper);
+
+    /**
+     * If a value is present, returns the Optional describing the value,
+     * otherwise returns an Optional produced by the supplying function.
+     *
+     * @param callable $supplier
+     *
+     * @return Optional
+     */
+    public abstract function or(callable $supplier);
 
     /**
      * If present returns held value, otherwise returns given $other value

@@ -69,6 +69,18 @@ final class Some extends Optional
     }
 
     /**
+     * If a value is present, performs the given action with the value,
+     * otherwise performs the given empty-based action
+     *
+     * @param callable $ifPresent
+     * @param callable $orElse
+     */
+    public function ifPresentOrElse(callable $ifPresent, callable $orElse)
+    {
+        $ifPresent($this->value);
+    }
+
+    /**
      * Filters held value. Returns empty optional in case given $predicate returns false
      *
      * @param callable $predicate
@@ -111,6 +123,19 @@ final class Some extends Optional
     {
         self::requireNonNull($mapper);
         return $this->requireOptional($mapper($this->value));
+    }
+
+    /**
+     * If a value is present, returns the Optional describing the value,
+     * otherwise returns an Optional produced by the supplying function.
+     *
+     * @param callable $supplier
+     *
+     * @return Optional
+     */
+    public function or (callable $supplier)
+    {
+        return $this;
     }
 
     /**

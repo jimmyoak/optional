@@ -1,6 +1,6 @@
 # Optional
 
-A port of Java 8's java.util.Optional improved for PHP.
+A port of Java 9's java.util.Optional improved for PHP.
 
 ## Some examples
 
@@ -57,6 +57,64 @@ $request = new Request(null);
 ```
 Program will throw the specified exception, otherwise, will return specified parsed date.
 
+### or
+We can chain Optionality:
+
+```php
+$findInMemory = function () {
+    ...
+    return Optional::ofNullable(...);
+};
+
+$findInDisc = function () {
+    ...
+    return Optional::ofNullable(...);
+};
+
+$findRemotely = function () {
+    ...
+    return Optional::ofNullable(...);
+};
+
+$optional = $findInMemory()
+    ->or($findInDisc)
+    ->or($findRemotely);
+```
+
+Callbacks will only execute if the last optional is empty. Example:
+
+```php
+$findInMemory = function () {
+    echo "Searching in memory...\n";
+    return Optional::empty();
+};
+
+$findInDisc = function () {
+    echo "Searching in disc...\n";
+    return Optional::of("Awesome");
+};
+
+$findRemotely = function () {
+    echo "Searching remotely...";
+    return Optional::of("Not so awesome");
+};
+
+$findInMemory()
+    ->or($findInDisc)
+    ->or($findRemotely)
+    ->ifPresent(function ($value) {
+        echo $value;
+    });
+```
+
+Will output:
+```text
+Searching in memory...
+Searching in disc...
+Awesome
+```
+
+
 ### filter
 
 ```php
@@ -93,6 +151,21 @@ Optional::ofNullable($request->getDate())
 ```
 If value, it would output: `It's present: 1992-10-07`
 Otherwise would do nothing.
+
+### ifPresentOrElse
+
+Similar to ifPresent but with an else callback if optional is empty
+
+```php
+Optional::ofNullable($request->getDate())
+    ->ifPresentOrElse(function ($value) {
+        echo "It's present: " . $value;
+    }, function() {
+        echo 'No value is present';
+    });
+```
+If value, it would output: `It's present: 1992-10-07`
+Otherwise, it would output: `No value is present`
 
 ### Comparable
 
