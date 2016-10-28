@@ -69,6 +69,18 @@ final class Some extends Optional
     }
 
     /**
+     * If a value is present, performs the given action with the value,
+     * otherwise performs the given empty-based action
+     *
+     * @param callable $ifPresent
+     * @param callable $orElse
+     */
+    public function ifPresentOrElse(callable $ifPresent, callable $orElse)
+    {
+        $ifPresent($this->value);
+    }
+
+    /**
      * Filters held value. Returns empty optional in case given $predicate returns false
      *
      * @param callable $predicate

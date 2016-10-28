@@ -111,6 +111,43 @@ class OptionalTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
+    public function should_execute_if_value_is_present_on_ifPresentOrElse()
+    {
+        $optional = Optional::of(self::VALUE);
+        $passIfPresent = false;
+        $passOrElse = false;
+        $optional->ifPresentOrElse(function ($value) use (&$passIfPresent) {
+            $this->assertSame(self::VALUE, $value);
+            $passIfPresent = true;
+        }, function() use (&$passOrElse) {
+            $passOrElse = true;
+        });
+
+        $this->assertTrue($passIfPresent);
+        $this->assertFalse($passOrElse);
+    }
+
+    /**
+     * @test
+     */
+    public function should_execute_orElse_if_no_value_present_on_ifPresentOrElse()
+    {
+        $optional = Optional::empty();
+        $passIfPresent = false;
+        $passOrElse = false;
+        $optional->ifPresentOrElse(function ($value) use (&$passIfPresent) {
+            $passIfPresent = true;
+        }, function() use (&$passOrElse) {
+            $passOrElse = true;
+        });
+
+        $this->assertFalse($passIfPresent);
+        $this->assertTrue($passOrElse);
+    }
+
+    /**
+     * @test
+     */
     public function should_return_optional_helding_value_in_case_filter_callback_returns_true()
     {
         $valueIsString = function ($value) {
