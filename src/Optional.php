@@ -116,6 +116,16 @@ abstract class Optional
     public abstract function flatMap(callable $mapper);
 
     /**
+     * If a value is present, returns the Optional describing the value,
+     * otherwise returns an Optional produced by the supplying function.
+     *
+     * @param callable $supplier
+     *
+     * @return Optional
+     */
+    public abstract function or(callable $supplier);
+
+    /**
      * If present returns held value, otherwise returns given $other value
      *
      * @param $other

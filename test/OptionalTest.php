@@ -119,7 +119,7 @@ class OptionalTest extends \PHPUnit_Framework_TestCase
         $optional->ifPresentOrElse(function ($value) use (&$passIfPresent) {
             $this->assertSame(self::VALUE, $value);
             $passIfPresent = true;
-        }, function() use (&$passOrElse) {
+        }, function () use (&$passOrElse) {
             $passOrElse = true;
         });
 
@@ -137,7 +137,7 @@ class OptionalTest extends \PHPUnit_Framework_TestCase
         $passOrElse = false;
         $optional->ifPresentOrElse(function ($value) use (&$passIfPresent) {
             $passIfPresent = true;
-        }, function() use (&$passOrElse) {
+        }, function () use (&$passOrElse) {
             $passOrElse = true;
         });
 
@@ -247,6 +247,51 @@ class OptionalTest extends \PHPUnit_Framework_TestCase
         Optional::of(self::VALUE)->flatMap(function ($value) {
             return $value;
         });
+    }
+
+    /**
+     * @test
+     */
+    public function should_return_first_optional_if_value_is_present()
+    {
+        $anotherOptionalValue = function () {
+            return Optional::of(self::ANOTHER_VALUE);
+        };
+
+        $optional = Optional::of(self::VALUE)
+            ->or($anotherOptionalValue);
+
+        $this->assertSame(self::VALUE, $optional->get());
+    }
+
+    /**
+     * @test
+     */
+    public function should_return_or_optional_if_value_is_not_present_in_first_optional()
+    {
+        $someOptionalWithValue = function () {
+            return Optional::of(self::VALUE);
+        };
+
+        $optional = Optional::empty()
+            ->or($someOptionalWithValue);
+
+        $this->assertSame(self::VALUE, $optional->get());
+    }
+
+    /**
+     * @test
+     */
+    public function should_return_empty_optional_if_value_is_not_present_in_any_or()
+    {
+        $someOptionalWithNoValue = function () {
+            return Optional::ofNullable(self::NO_VALUE);
+        };
+
+        $optional = Optional::empty()
+            ->or($someOptionalWithNoValue);
+
+        $this->assertTrue(Optional::empty()->equals($optional));
     }
 
     /**

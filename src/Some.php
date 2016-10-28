@@ -126,6 +126,19 @@ final class Some extends Optional
     }
 
     /**
+     * If a value is present, returns the Optional describing the value,
+     * otherwise returns an Optional produced by the supplying function.
+     *
+     * @param callable $supplier
+     *
+     * @return Optional
+     */
+    public function or (callable $supplier)
+    {
+        return $this;
+    }
+
+    /**
      * If present returns held value, otherwise returns given $other value
      *
      * @param $other
